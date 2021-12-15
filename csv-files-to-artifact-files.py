@@ -34,7 +34,7 @@ if len(argv)>0:
     if '--output' in argv:
         outputDir = argv[argv.index('--output')+1]
     else:
-        outputDir = None
+        outputDir = 'Artifact-XML'
 
 def flatten_cmm_csv(filepath:str):
     flat = {'file':filepath}
@@ -51,16 +51,16 @@ def flatten_cmm_csv(filepath:str):
             else:
                 flat[item[0]] = item[1]
         elif after_notes:
-            m_type = item[2]
+            m_type = item[2].replace(' ','').lower()
             measures = {'nominal':3,'actual':6,'error':9}
             for val_type in measures:
-                if m_type == 'Position Cartesian':
+                if 'positioncartesian' in m_type:
                         for id,direc in enumerate(['x','y','z']):
                             flat[f'{item[1]}_{val_type}_{direc}'] = item[measures[val_type]+id]
-                elif m_type == 'Diameter':
-                    flat[f'{item[2]}_{item[1]}_{val_type}'] = item[measures[val_type]]
-                elif m_type == 'PointPointDistance':
-                    flat[f'{item[2]}_{item[1]}_{val_type}'] = item[measures[val_type]]
+                elif 'diameter' in m_type:
+                    flat[f'{m_type}_{item[1]}_{val_type}'] = item[measures[val_type]]
+                elif 'pointpointdistance' in m_type:
+                    flat[f'{m_type}_{item[1]}_{val_type}'] = item[measures[val_type]]
     return flat
 
 def output_compiled_csv(data:list,filepath:str):
@@ -79,19 +79,19 @@ def average_data(data:list):
     averages = {}
     for data in all_data:
         for d in data:
-            if d.startswith('Pos ') and 'actual' in d:
+            if d.lower().startswith('pos ') and 'actual' in d:
                 label = f'{d[4:6]}_{d[-1]}'
                 try: averages[label].append(float(data[d]))
                 except KeyError: averages[label] = [float(data[d])]
-            elif d.startswith('Diameter') and 'actual' in d:
+            elif d.startswith('diameter') and 'actual' in d:
                 label = 'S'+d.split('_')[1][1:]
                 try: averages[label].append(float(data[d]))
                 except KeyError: averages[label] = [float(data[d])]
-            elif d.startswith('PointPointDistance') and 'actual' in d:
+            elif d.startswith('pointpointdistance') and 'actual' in d:
                 label = d.split('_')[1]
                 try: averages[f'{label[0:2]}-{label[-1]}'].append(float(data[d]))
                 except KeyError: averages[f'{label[0:2]}-{label[-1]}'] = [float(data[d])]
-            elif 'Temperature' in d:
+            elif 'temperature' in d.lower():
                 try: averages[d[:-3]+'degC'].append(float(data[d]))
                 except KeyError: averages[d[:-3]+'degC'] = [float(data[d])]
     return {a:(mean(averages[a]),std(averages[a]),len(averages[a])) for a in averages if len(averages[a])}
