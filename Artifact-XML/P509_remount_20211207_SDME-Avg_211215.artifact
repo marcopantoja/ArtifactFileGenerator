@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<artifact type="P509_remount_20211207_SDME-Avg_211215.artifact" name="P509_remount_20211207_SDME-Avg_211215.artifact SDME Avg" date="2021-12-15" revision="0">
+	<changelog>
+		<revision value="0" date="2021-12-15" description="Initial python generated file, from 36 csv cmm measurement files." />
+	</changelog>
+	<alignmentGuide icr="None" rotX="0" rotY="0" rotZ="0" angleTolerance="60" />
+	<scanGuide dynamicRange="DRP2" />
+	<pointFilter maxNormalAngleError="20" outlierRemoval="0.3" />
+	<metrologyInfo date="2021-12-07" lab="SDME" tool="Axiom" metrologist="Larry" temperatureDegC="20.05" comment="31 touch pts, 10 deg below equator; Average of South and East Orientations; n=36 (2 orientations x 6 reps/orientation x 3 sessions); Ball Plate coord system defined by Datum A: best fit plane through spheres, Datum B: line through sphere centers 1 and 2 projected onto Datum A, Origin at S0. Ball Plate placed directly on CMM table. Assumed Titanium Ti-6Al-4V spheres."/>
+	<spheres>
+            <sphere name="S0" x="0.0" y="0.0" z="0.0" diameter="25.39888333333333" count="36" stdev_mm="0.00043429380736017837" CTE_m_m_K="8.6E-06"/>
+            <sphere name="S1" x="62.48281944444446" y="37.51591944444444" z="0.08290000000000002" diameter="25.40280277777778" count="36" stdev_mm="0.0005273024175044492" CTE_m_m_K="8.6E-06"/>
+            <sphere name="S2" x="-63.451136111111104" y="37.51591944444444" z="0.06865000000000002" diameter="25.40293333333333" count="36" stdev_mm="0.0004129837231123293" CTE_m_m_K="8.6E-06"/>
+            <sphere name="S3" x="-62.47838055555556" y="-36.462155555555555" z="0.08309444444444446" diameter="25.404808333333335" count="36" stdev_mm="0.0003722118572360523" CTE_m_m_K="8.6E-06"/>
+            <sphere name="S4" x="61.44381944444446" y="-37.464675" z="0.06911666666666667" diameter="25.40265833333333" count="36" stdev_mm="0.0003147971127915359" CTE_m_m_K="8.6E-06"/>
+	</spheres>
+	<distanceMeasures>
+	</distanceMeasures>
+</artifact>
