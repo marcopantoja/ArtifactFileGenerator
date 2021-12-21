@@ -133,13 +133,11 @@ for r,d,f in walk(cwd):
         with open(artifact_path,'w') as artifactFile:
             sphere_info = ''
             for i in range(spheres):
-                sphere_info+=f'''
-            <sphere name="S{i}" x="{averages[f"S{i}_x"][0]}" y="{averages[f"S{i}_y"][0]}" z="{averages[f"S{i}_z"][0]}" diameter="{averages[f"S{i}"][0]}" count="{averages[f"S{i}"][2]}" stdev_mm="{averages[f"S{i}"][1]}" CTE_m_m_K="8.6E-06"/>'''
+                sphere_info+=f'''\n\t\t<sphere name="S{i}" x="{averages[f"S{i}_x"][0]}" y="{averages[f"S{i}_y"][0]}" z="{averages[f"S{i}_z"][0]}" diameter="{averages[f"S{i}"][0]}" count="{averages[f"S{i}"][2]}" stdev_mm="{averages[f"S{i}"][1]}" CTE_m_m_K="8.6E-06"/>'''
             distance_info = ''
             for dist in averages:
                 if dist.startswith('L') and '-' in dist:
-                    distance_info+=f'''
-            <sphereCenterDistance name="{dist}" sphereA="S{dist[1]}" sphereB="S{dist[-1]}" distance="{averages[dist][0]}" count="{averages[dist][2]}" stdev_mm="{averages[dist][1]}" CTE_m_m_K="1.2E-06"/>'''
+                    distance_info+=f'''\n\t\t<sphereCenterDistance name="{dist}" sphereA="S{dist[1]}" sphereB="S{dist[-1]}" distance="{averages[dist][0]}" count="{averages[dist][2]}" stdev_mm="{averages[dist][1]}" CTE_m_m_K="1.2E-06"/>'''
             contents = f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <artifact type="{artifact_name}" name="{artifact_name} SDME Avg" date="{dt.now().strftime('%Y-%m-%d')}" revision="0">
 	<changelog>
