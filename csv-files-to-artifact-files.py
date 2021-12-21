@@ -94,7 +94,7 @@ def average_data(data:list):
             elif 'temperature' in d.lower():
                 try: averages[d[:-3]+'degC'].append(float(data[d]))
                 except KeyError: averages[d[:-3]+'degC'] = [float(data[d])]
-    return {a:(mean(averages[a]),std(averages[a]),len(averages[a])) for a in averages if len(averages[a])}
+    return {a:(mean(averages[a]),std(averages[a],ddof=1),len(averages[a])) for a in averages if len(averages[a])}
 
 for r,d,f in walk(cwd):
     d = [i.lower() for i in d]
