@@ -1,11 +1,12 @@
-from genericpath import isfile
-from os import walk,getcwd,listdir,makedirs
-from os.path import join,isdir,basename
 from csv import DictWriter
-from sys import argv
-from numpy import std,mean
 from datetime import datetime as dt
+from os import getcwd, listdir, makedirs, walk
+from os.path import basename, isdir, join
+from sys import argv
+from xml.etree import ElementTree as ET
 
+from genericpath import isfile
+from numpy import mean, std
 
 # check args
 if len(argv)>0:
@@ -96,14 +97,29 @@ def average_data(data:list):
                 except KeyError: averages[d[:-3]+'degC'] = [float(data[d])]
     return {a:(mean(averages[a]),std(averages[a],ddof=1),len(averages[a])) for a in averages if len(averages[a])}
 
+def ordered_dist_measures_from(avg:dict,keystrt='L',sep='-'):
+    """
+    takes list of average values and returns only lengths ordered by spheres.
+    """
+    lengths = {l:avg[l] for l in avg if l.startswith(keystrt) and sep in l}
+    ordered = {}
+    while len(lengths):
+        A_B = [(int(l[1:].split('-')[0]),int(l[1:].split('-')[-1])) for l in lengths]
+        Amin = min([a[0] for a in A_B])
+        bsort = sorted([b[-1] for b in A_B if b[0]==Amin])
+        for i in bsort:
+            ordered[f'{keystrt}{Amin}{sep}{i}'] = lengths[f'{keystrt}{Amin}{sep}{i}']
+            lengths.pop(f'{keystrt}{Amin}{sep}{i}')
+    return ordered
+
 for r,d,f in walk(cwd):
     d = [i.lower() for i in d]
     cmmx = [i.lower() for i in f if i.endswith('.cmmx')]
     if 'reports' in d and len(cmmx):
-        artifact = basename(r)
+        artifact = basename(r).split('_')
         reports = join(r,'reports')
         csvs = [join(reports,f) for f in listdir(reports) if f.endswith('.csv')]
-        artifact_summary = join(reports,artifact+'_summary.csv')
+        artifact_summary = join(reports,'_'.join(artifact)+'_summary.csv')
         if not len(csvs): continue# no csv files found
         elif isfile(artifact_summary): continue
         print('Compiling: ',r)
@@ -114,7 +130,7 @@ for r,d,f in walk(cwd):
         # all_data averaged
         averages = average_data(all_data)
         # make artifact file
-        artifact_name = artifact+f'_SDME-Avg_{dt.now().strftime("%y%m%d")}.artifact'
+        artifact_name = artifact[0]+f'_SDME-Avg.artifact'
         if outputDir is not None and isdir(outputDir):
             artifact_path = join(outputDir,artifact_name)
         elif outputDir is not None:
@@ -124,32 +140,51 @@ for r,d,f in walk(cwd):
             except:pass
         else:
             artifact_path = join(r,artifact_name)
-        
-        spheres = len([int(s[1:]) for s in averages if '_' not in s and '-' not in s and s[1:].isnumeric()])
+        chg_log = ''
+        if isfile(artifact_path):
+            try:
+                chg_log = ET.parse(artifact_path).getroot().find('changelog')
+                chg_log[-1].tail = '\n'+'\t'*2
+                rev_num = max([int(r.attrib['value']) for r in chg_log.findall('revision')])+1
+                if len(artifact)>1:
+                    description = ', '.join(artifact[1:])
+                else:
+                    description = 'Re-measured, descriptors N/A'
+                ET.SubElement(chg_log, 'revision', {
+                    'value':str(rev_num),
+                    'date':dt.now().strftime("%Y-%m-%d"),
+                    'description':description
+                }).tail='\n\t'
+                chg_log = ET.tostring(chg_log).decode()[:-2]
+            except:pass
+        else:
+            rev_num = 0
+        if chg_log =='': chg_log = '<changelog>\n\t\t'+\
+            f'<revision value="0" date="{dt.now().strftime("%Y-%m-%d")}" '+\
+            f'description="Initial python generated file, from {len(csvs)} csv cmm measurement files." />\n\t</changelog>'
+        spheres = sorted([int(s[1:]) for s in averages if '_' not in s and '-' not in s and s[1:].isnumeric()])
         try:
             inspector = all_data[0]['Inspector']
         except:
             inspector = ''
         with open(artifact_path,'w') as artifactFile:
             sphere_info = ''
-            for i in range(spheres):
+            for i in spheres:
                 sphere_info+=f'''\n\t\t<sphere name="S{i}" x="{averages[f"S{i}_x"][0]}" y="{averages[f"S{i}_y"][0]}" z="{averages[f"S{i}_z"][0]}" diameter="{averages[f"S{i}"][0]}" count="{averages[f"S{i}"][2]}" stdev_mm="{averages[f"S{i}"][1]}" CTE_m_m_K="8.6E-06"/>'''
             distance_info = ''
-            for dist in averages:
-                if dist.startswith('L') and '-' in dist:
-                    distance_info+=f'''\n\t\t<sphereCenterDistance name="{dist}" sphereA="S{dist[1]}" sphereB="S{dist[-1]}" distance="{averages[dist][0]}" count="{averages[dist][2]}" stdev_mm="{averages[dist][1]}" CTE_m_m_K="1.2E-06"/>'''
-            contents = f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<artifact type="{artifact_name}" name="{artifact_name} SDME Avg" date="{dt.now().strftime('%Y-%m-%d')}" revision="0">
-	<changelog>
-		<revision value="0" date="{dt.now().strftime('%Y-%m-%d')}" description="Initial python generated file, from {len(csvs)} csv cmm measurement files." />
-	</changelog>
-	<alignmentGuide icr="None" rotX="0" rotY="0" rotZ="0" angleTolerance="60" />
-	<scanGuide dynamicRange="DRP2" />
-	<pointFilter maxNormalAngleError="20" outlierRemoval="0.3" />
-	<metrologyInfo date="{all_data[0]['Inspection Time'][:4]}-{all_data[0]['Inspection Time'][4:6]}-{all_data[0]['Inspection Time'][6:8]}" lab="SDME" tool="Axiom" metrologist="{inspector}" temperatureDegC="{averages['TemperaturedegC'][0]}" comment="31 touch pts, 10 deg below equator; Average of South and East Orientations; n={averages['TemperaturedegC'][-1]} (2 orientations x 6 reps/orientation x 3 sessions); Ball Plate coord system defined by Datum A: best fit plane through spheres, Datum B: line through sphere centers 1 and 2 projected onto Datum A, Origin at S0. Ball Plate placed directly on CMM table. Assumed Titanium Ti-6Al-4V spheres."/>
-	<spheres>{sphere_info}
-	</spheres>
-	<distanceMeasures>{distance_info}
-	</distanceMeasures>
-</artifact>'''
+            for dist in ordered_dist_measures_from(averages):
+                distance_info+=f'''\n\t\t<sphereCenterDistance name="{dist}" sphereA="S{dist[1]}" sphereB="S{dist[-1]}" distance="{averages[dist][0]}" count="{averages[dist][2]}" stdev_mm="{averages[dist][1]}" CTE_m_m_K="1.2E-06"/>'''
+            contents = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n\t'+\
+                f'<artifact type="{artifact[0]}" name="{artifact[0]} SDME Avg" date="{dt.now().strftime("%Y-%m-%d")}" revision="{rev_num}">'+\
+                    '\n\t'+chg_log+\
+                    '\n\t<alignmentGuide icr="None" rotX="0" rotY="0" rotZ="0" angleTolerance="60" />'+\
+                    '\n\t<scanGuide dynamicRange="DRP2" />\n\t<pointFilter maxNormalAngleError="20" outlierRemoval="0.3" />'+\
+                    f'\n\t<metrologyInfo date="{all_data[0]["Inspection Time"][:4]}-{all_data[0]["Inspection Time"][4:6]}'+\
+                        f'-{all_data[0]["Inspection Time"][6:8]}" lab="SDME" tool="Axiom" metrologist="{inspector}" '+\
+                        f'temperatureDegC="{averages["TemperaturedegC"][0]}" comment="31 touch pts, 10 deg below equator; Average of '+\
+                        f'South and East Orientations; n={averages["TemperaturedegC"][-1]} (2 orientations x 6 reps/orientation x 3 sessions); '+\
+                        'Ball Plate coord system defined by Datum A: best fit plane through spheres, Datum B: line through sphere centers 1 '+\
+                        'and 2 projected onto Datum A, Origin at S0. Ball Plate placed directly on CMM table. Assumed Titanium Ti-6Al-4V spheres."/>'+\
+                    f'\n\t<spheres>{sphere_info}\n\t</spheres>'+\
+                    f'\n\t<distanceMeasures>{distance_info}\n\t</distanceMeasures>\n</artifact>'
             artifactFile.write(contents)
