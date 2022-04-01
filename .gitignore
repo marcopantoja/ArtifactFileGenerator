@@ -1,0 +1,5 @@
+*.csv
+*.zip
+cmm-csv-files/*/Reports/*.csv
+cmm-csv-files/*/Reports/*.xlsm
+cmm-csv-files/*/*.cmmx
