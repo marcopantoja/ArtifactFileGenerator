@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<artifact type="P516" name="P516 SDME Avg" date="2022-03-31" revision="0">
+	<changelog>
+		<revision date="2022-03-31" description="Initial python generated file, from 36 csv cmm measurement files." value="0" />
+	</changelog>
+	<alignmentGuide icr="None" rotX="0" rotY="0" rotZ="0" angleTolerance="60" />
+	<scanGuide dynamicRange="DRP2" />
+	<pointFilter maxNormalAngleError="20" outlierRemoval="0.3" />
+	<metrologyInfo date="2022-03-29" lab="SDME" tool="Axiom" metrologist="Larry" temperatureDegC="21.5" comment="31 touch pts, 10 deg below equator; Average of South and East Orientations; n=36 (2 orientations x 6 reps/orientation x 3 sessions); Ball Plate coord system defined by Datum A: best fit plane through spheres, Datum B: line through sphere centers 1 and 2 projected onto Datum A, Origin at S0. Ball Plate placed directly on CMM table. Assumed Titanium Ti-6Al-4V spheres."/>
+	<spheres>
+		<sphere name="S0" x="0.0000" y="0.0000" z="0.0000" diameter="25.4055" count="36" stdev_mm="0.000435" CTE_m_m_K="8.6E-06"/>
+		<sphere name="S1" x="62.5058" y="37.4900" z="0.0163" diameter="25.4061" count="36" stdev_mm="0.000309" CTE_m_m_K="8.6E-06"/>
+		<sphere name="S2" x="-63.4960" y="37.4900" z="0.0054" diameter="25.4051" count="36" stdev_mm="0.000380" CTE_m_m_K="8.6E-06"/>
+		<sphere name="S3" x="-62.5208" y="-36.4994" z="0.0165" diameter="25.4049" count="36" stdev_mm="0.000488" CTE_m_m_K="8.6E-06"/>
+		<sphere name="S4" x="61.4874" y="-37.5009" z="0.0055" diameter="25.4050" count="36" stdev_mm="0.000332" CTE_m_m_K="8.6E-06"/>
+	</spheres>
+	<distanceMeasures>
+		<sphereCenterDistance name="L0-1" sphereA="S0" sphereB="S1" distance="72.8867" count="36" stdev_mm="0.000724" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L0-2" sphereA="S0" sphereB="S2" distance="73.7376" count="36" stdev_mm="0.001032" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L0-3" sphereA="S0" sphereB="S3" distance="72.3952" count="36" stdev_mm="0.000864" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L0-4" sphereA="S0" sphereB="S4" distance="72.0210" count="36" stdev_mm="0.000524" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L1-2" sphereA="S1" sphereB="S2" distance="126.0018" count="36" stdev_mm="0.001852" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L1-3" sphereA="S1" sphereB="S3" distance="145.2793" count="36" stdev_mm="0.001460" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L1-4" sphereA="S1" sphereB="S4" distance="74.9979" count="36" stdev_mm="0.000713" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L2-3" sphereA="S2" sphereB="S3" distance="73.9959" count="36" stdev_mm="0.001000" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L2-4" sphereA="S2" sphereB="S4" distance="145.7549" count="36" stdev_mm="0.001268" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L3-4" sphereA="S3" sphereB="S4" distance="124.0122" count="36" stdev_mm="0.001394" CTE_m_m_K="1.2E-06"/>
+	</distanceMeasures>
+</artifact>

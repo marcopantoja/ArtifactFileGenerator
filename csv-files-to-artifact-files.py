@@ -1,12 +1,13 @@
 from csv import DictWriter
 from datetime import datetime as dt
+from math import sqrt
 from os import getcwd, listdir, makedirs, walk
 from os.path import basename, isdir, join
+from statistics import mean, stdev
 from sys import argv
 from xml.etree import ElementTree as ET
 
 from genericpath import isfile
-from numpy import mean, std
 
 # check args
 if len(argv)>0:
@@ -55,9 +56,9 @@ def flatten_cmm_csv(filepath:str):
             m_type = item[2].replace(' ','').lower()
             measures = {'nominal':3,'actual':6,'error':9}
             for val_type in measures:
-                if 'positioncartesian' in m_type:
-                        for id,direc in enumerate(['x','y','z']):
-                            flat[f'{item[1]}_{val_type}_{direc}'] = item[measures[val_type]+id]
+                if 'positioncartesian' in m_type or 'trueposition' in m_type:
+                    for id,direc in enumerate(['x','y','z']):
+                        flat[f'{item[1]}_{val_type}_{direc}'] = item[measures[val_type]+id]
                 elif 'diameter' in m_type:
                     flat[f'{m_type}_{item[1]}_{val_type}'] = item[measures[val_type]]
                 elif 'pointpointdistance' in m_type:
@@ -95,7 +96,13 @@ def average_data(data:list):
             elif 'temperature' in d.lower():
                 try: averages[d[:-3]+'degC'].append(float(data[d]))
                 except KeyError: averages[d[:-3]+'degC'] = [float(data[d])]
-    return {a:(mean(averages[a]),std(averages[a],ddof=1),len(averages[a])) for a in averages if len(averages[a])}
+    for a in averages:
+        if a.startswith('L') and '-' in a:
+            A_B = a[1:].split('-'); A = 'S'+A_B[0]+'_'; B = 'S'+A_B[-1]+'_'
+            if A+'x' in averages and B+'x' in averages:
+                for idx,_ in enumerate(averages[a]):
+                    averages[a][idx] = sqrt(sum([(averages[A+'x'][idx]-averages[B+'x'][idx])**2,(averages[A+'y'][idx]-averages[B+'y'][idx])**2,(averages[A+'z'][idx]-averages[B+'z'][idx])**2]))
+    return {a:(mean(averages[a]),stdev(averages[a]),len(averages[a])) for a in averages if len(averages[a])}
 
 def ordered_dist_measures_from(avg:dict,keystrt='L',sep='-'):
     """
@@ -170,18 +177,18 @@ for r,d,f in walk(cwd):
         with open(artifact_path,'w') as artifactFile:
             sphere_info = ''
             for i in spheres:
-                sphere_info+=f'''\n\t\t<sphere name="S{i}" x="{averages[f"S{i}_x"][0]}" y="{averages[f"S{i}_y"][0]}" z="{averages[f"S{i}_z"][0]}" diameter="{averages[f"S{i}"][0]}" count="{averages[f"S{i}"][2]}" stdev_mm="{averages[f"S{i}"][1]}" CTE_m_m_K="8.6E-06"/>'''
+                sphere_info+=f'''\n\t\t<sphere name="S{i}" x="{averages[f"S{i}_x"][0]:.4f}" y="{averages[f"S{i}_y"][0]:.4f}" z="{averages[f"S{i}_z"][0]:.4f}" diameter="{averages[f"S{i}"][0]:.4f}" count="{averages[f"S{i}"][2]}" stdev_mm="{averages[f"S{i}"][1]:.6f}" CTE_m_m_K="8.6E-06"/>'''
             distance_info = ''
             for dist in ordered_dist_measures_from(averages):
-                distance_info+=f'''\n\t\t<sphereCenterDistance name="{dist}" sphereA="S{dist[1]}" sphereB="S{dist[-1]}" distance="{averages[dist][0]}" count="{averages[dist][2]}" stdev_mm="{averages[dist][1]}" CTE_m_m_K="1.2E-06"/>'''
-            contents = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n\t'+\
+                distance_info+=f'''\n\t\t<sphereCenterDistance name="{dist}" sphereA="S{dist[1]}" sphereB="S{dist[-1]}" distance="{averages[dist][0]:.4f}" count="{averages[dist][2]}" stdev_mm="{averages[dist][1]:.6f}" CTE_m_m_K="1.2E-06"/>'''
+            contents = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+\
                 f'<artifact type="{artifact[0]}" name="{artifact[0]} SDME Avg" date="{dt.now().strftime("%Y-%m-%d")}" revision="{rev_num}">'+\
                     '\n\t'+chg_log+\
                     '\n\t<alignmentGuide icr="None" rotX="0" rotY="0" rotZ="0" angleTolerance="60" />'+\
                     '\n\t<scanGuide dynamicRange="DRP2" />\n\t<pointFilter maxNormalAngleError="20" outlierRemoval="0.3" />'+\
                     f'\n\t<metrologyInfo date="{all_data[0]["Inspection Time"][:4]}-{all_data[0]["Inspection Time"][4:6]}'+\
                         f'-{all_data[0]["Inspection Time"][6:8]}" lab="SDME" tool="Axiom" metrologist="{inspector}" '+\
-                        f'temperatureDegC="{averages["TemperaturedegC"][0]}" comment="31 touch pts, 10 deg below equator; Average of '+\
+                        f'temperatureDegC="{averages["TemperaturedegC"][0]:.1f}" comment="31 touch pts, 10 deg below equator; Average of '+\
                         f'South and East Orientations; n={averages["TemperaturedegC"][-1]} (2 orientations x 6 reps/orientation x 3 sessions); '+\
                         'Ball Plate coord system defined by Datum A: best fit plane through spheres, Datum B: line through sphere centers 1 '+\
                         'and 2 projected onto Datum A, Origin at S0. Ball Plate placed directly on CMM table. Assumed Titanium Ti-6Al-4V spheres."/>'+\
