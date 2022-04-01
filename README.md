@@ -4,7 +4,6 @@ This repository contains scripts to enable the automatic creation of artifact fi
 
 
 # Requirements:
---numpy (pip install numpy) if you don't have it already
 Users must have a valid python 3 installation to run this tool. Email marco.pantoja1@hp.com with any questions.
 
 Creating Artifact Files:
@@ -28,4 +27,7 @@ Creating Artifact Files:
 have a new revision listed. The description is taken from the artifactFolderName. This name can be descriptive and underscore separated.
 The first part should always be P### and anything following will be parsed for description strings. 
 
-Otherwise, if it's the first time generating an artifact file, the changelogs will be identical besides the dates.
+Otherwise, if it's the first time generating an artifact file, the changelogs will be identical besides the dates. 
+You should create new P### folders each time new measurements are run, unless you want to combine the values with a previous
+set of csv files. In that case, delete the summary.csv that was created, and add additional data csv files to this reports folder. 
+Then, when you re-run the batch file you will see the artifact files updated. 
