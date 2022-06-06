@@ -1,5 +1,6 @@
 from csv import DictWriter
 from datetime import datetime as dt
+from email.mime import base
 from math import sqrt
 from os import getcwd, listdir, makedirs, walk
 from os.path import basename, isdir, join
@@ -182,7 +183,7 @@ for r,d,f in walk(cwd):
             for dist in ordered_dist_measures_from(averages):
                 distance_info+=f'''\n\t\t<sphereCenterDistance name="{dist}" sphereA="S{dist[1]}" sphereB="S{dist[-1]}" distance="{averages[dist][0]:.4f}" count="{averages[dist][2]}" stdev_mm="{averages[dist][1]:.6f}" CTE_m_m_K="1.2E-06"/>'''
             contents = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'+\
-                f'<artifact type="{artifact[0]}" name="{artifact[0]} SDME Avg" date="{dt.now().strftime("%Y-%m-%d")}" revision="{rev_num}">'+\
+                f'<artifact type="{artifact[0]}" name="{artifact[0]} SDME Avg" date="{dt.now().strftime("%Y-%m-%d")}" revision="{rev_num}" fileName="{basename(artifact_path)}">'+\
                     '\n\t'+chg_log+\
                     '\n\t<alignmentGuide icr="None" rotX="0" rotY="0" rotZ="0" angleTolerance="60" />'+\
                     '\n\t<scanGuide dynamicRange="DRP2" />\n\t<pointFilter maxNormalAngleError="20" outlierRemoval="0.3" />'+\
