@@ -1,14 +1,12 @@
 from csv import DictWriter
 from datetime import datetime as dt
-from email.mime import base
 from math import sqrt
 from os import getcwd, listdir, makedirs, walk
-from os.path import basename, isdir, join
+from os.path import basename, isdir, isfile, join, dirname
 from statistics import mean, stdev
+from subprocess import call
 from sys import argv
 from xml.etree import ElementTree as ET
-
-from genericpath import isfile
 
 # check args
 if len(argv)>0:
@@ -196,3 +194,5 @@ for r,d,f in walk(cwd):
                     f'\n\t<spheres>{sphere_info}\n\t</spheres>'+\
                     f'\n\t<distanceMeasures>{distance_info}\n\t</distanceMeasures>\n</artifact>'
             artifactFile.write(contents)
+        call(f'python send_to_s3.py Upload "{artifact_path}" AWSPrefix shared/ArtifactFileData/All-Artifacts')
+        call(f'python send_to_s3.py Upload "{r}" AWSPrefix shared/ArtifactFileData/{basename(r)}')

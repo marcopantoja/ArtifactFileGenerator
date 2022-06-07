@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<artifact type="P516" name="P516 SDME Avg" date="2022-03-31" revision="0">
+<artifact type="P516" name="P516 SDME Avg" date="2022-06-06" revision="0" fileName="P516_SDME-Avg.artifact">
 	<changelog>
-		<revision date="2022-03-31" description="Initial python generated file, from 36 csv cmm measurement files." value="0" />
+		<revision value="0" date="2022-06-06" description="Initial python generated file, from 36 csv cmm measurement files." />
 	</changelog>
 	<alignmentGuide icr="None" rotX="0" rotY="0" rotZ="0" angleTolerance="60" />
 	<scanGuide dynamicRange="DRP2" />

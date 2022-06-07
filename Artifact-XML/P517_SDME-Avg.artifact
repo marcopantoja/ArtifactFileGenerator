@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<artifact type="P517" name="P517 SDME Avg" date="2022-03-31" revision="0">
+<artifact type="P517" name="P517 SDME Avg" date="2022-06-06" revision="0" fileName="P517_SDME-Avg.artifact">
 	<changelog>
-		<revision date="2022-03-31" description="Initial python generated file, from 36 csv cmm measurement files." value="0" />
+		<revision value="0" date="2022-06-06" description="Initial python generated file, from 36 csv cmm measurement files." />
 	</changelog>
 	<alignmentGuide icr="None" rotX="0" rotY="0" rotZ="0" angleTolerance="60" />
 	<scanGuide dynamicRange="DRP2" />
@@ -15,15 +15,15 @@
 		<sphere name="S4" x="61.4916" y="-37.4823" z="0.0042" diameter="25.4056" count="36" stdev_mm="0.000465" CTE_m_m_K="8.6E-06"/>
 	</spheres>
 	<distanceMeasures>
-		<sphereCenterDistance name="L0-1" sphereA="S0" sphereB="S1" distance="72.8960" count="36" stdev_mm="0.000884" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L0-2" sphereA="S0" sphereB="S2" distance="73.7543" count="36" stdev_mm="0.000865" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L0-3" sphereA="S0" sphereB="S3" distance="72.3868" count="36" stdev_mm="0.000830" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L0-4" sphereA="S0" sphereB="S4" distance="72.0149" count="36" stdev_mm="0.000493" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L1-2" sphereA="S1" sphereB="S2" distance="126.0095" count="36" stdev_mm="0.001981" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L1-3" sphereA="S1" sphereB="S3" distance="145.2802" count="36" stdev_mm="0.001591" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L1-4" sphereA="S1" sphereB="S4" distance="74.9979" count="36" stdev_mm="0.000686" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L2-3" sphereA="S2" sphereB="S3" distance="74.0124" count="36" stdev_mm="0.001209" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L2-4" sphereA="S2" sphereB="S4" distance="145.7656" count="36" stdev_mm="0.001122" CTE_m_m_K="1.2E-06"/>
-		<sphereCenterDistance name="L3-4" sphereA="S3" sphereB="S4" distance="124.0082" count="36" stdev_mm="0.001525" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L0-1" sphereA="S0" sphereB="S1" distance="72.8960" count="36" stdev_mm="0.000876" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L0-2" sphereA="S0" sphereB="S2" distance="73.7543" count="36" stdev_mm="0.000862" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L0-3" sphereA="S0" sphereB="S3" distance="72.3868" count="36" stdev_mm="0.000829" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L0-4" sphereA="S0" sphereB="S4" distance="72.0149" count="36" stdev_mm="0.000481" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L1-2" sphereA="S1" sphereB="S2" distance="126.0095" count="36" stdev_mm="0.001971" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L1-3" sphereA="S1" sphereB="S3" distance="145.2802" count="36" stdev_mm="0.001587" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L1-4" sphereA="S1" sphereB="S4" distance="74.9979" count="36" stdev_mm="0.000682" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L2-3" sphereA="S2" sphereB="S3" distance="74.0124" count="36" stdev_mm="0.001188" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L2-4" sphereA="S2" sphereB="S4" distance="145.7656" count="36" stdev_mm="0.001101" CTE_m_m_K="1.2E-06"/>
+		<sphereCenterDistance name="L3-4" sphereA="S3" sphereB="S4" distance="124.0082" count="36" stdev_mm="0.001516" CTE_m_m_K="1.2E-06"/>
 	</distanceMeasures>
 </artifact>
