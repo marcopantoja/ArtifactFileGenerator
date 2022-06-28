@@ -1,0 +1,13 @@
+	<!-- Metrology Details
+			Sphere Probing ........... 31 touch pts, 10 deg below equator 
+			Inspection Orientations .. measured and averaged South and East orientations 
+			Inspected Assembly ....... ball plate mounted to vertical backing plate
+			Fixturing ................ ball plate assembly laid flat directly on CMM table
+			Number of Inspections .... n=36 (2 orientations x 6 reps/orientation x 3 sessions)
+			Ball Plate coord system: 
+				         Datum A ..... best fit plane through all sphere centers
+				         Datum B ..... line through sphere centers 1 and 2 projected onto Datum Plane A
+				         Origin ...... center of sphere S0
+			Sphere Material .......... assumed Titanium Ti-6Al-4V
+			Plate Material ........... Invar
+	-->
