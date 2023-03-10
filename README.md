@@ -4,7 +4,7 @@ This repository contains scripts to enable the automatic creation of artifact fi
 
 
 # Requirements:
-Users must have a valid python 3 installation to run this tool. Email marco.pantoja1@hp.com with any questions.
+Users must have a valid python 3 installation to run this tool. Email marco.pantoja@hp.com with any questions.
 
 Creating Artifact Files:
 1. Users should copy data into cmm-csv-files or point script to base data directory using the command line arguments
