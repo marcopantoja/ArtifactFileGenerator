@@ -1,10 +1,10 @@
 # Artifact File Creation & Tracking
 
-This repository contains scripts to enable the automatic creation of artifact files, given a set of measurements from a cmm. The script reads csv files from a directory, and determines average values to write a valid artifact file. This artifact xml file is then stored in the repository for correct versioning, and to maintain a database of files from which the HP3DScanStudio software can load valid measurement files. The files here can be updated as needed, and changes can be pulled into new software builds. 
+This repository contains scripts to enable the automatic creation of artifact files, given a set of measurements from a cmm. The script reads csv files from a directory, and determines average values to write a valid artifact file. This artifact xml file is then stored in the repository for correct versioning, and to maintain a database of files from which the 3DScan software can load valid measurement files. The files here can be updated as needed, and changes can be pulled into new software builds. 
 
 
 # Requirements:
-Users must have a valid python 3 installation to run this tool. Email marco.pantoja@hp.com with any questions.
+Users must have a valid python 3 installation to run this tool.
 
 Creating Artifact Files:
 1. Users should copy data into cmm-csv-files or point script to base data directory using the command line arguments
